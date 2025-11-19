@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pizza
+* source:	https://sketchfab.com/3d-models/pizza-cdc2c970c84244b3b3293dd022b4fdfa
+* author:	erebus3d (https://sketchfab.com/erebus3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pizza" (https://sketchfab.com/3d-models/pizza-cdc2c970c84244b3b3293dd022b4fdfa) by erebus3d (https://sketchfab.com/erebus3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
