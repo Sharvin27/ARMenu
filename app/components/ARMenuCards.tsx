@@ -370,6 +370,20 @@ const ARMenuCards: React.FC = () => {
     };
   }, []);
 
+  const disposeObject = (obj: THREE.Object3D) => {
+    obj.traverse((child: any) => {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((m: any) => m.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+  };
+
+
   // ------------------ UPDATE MODEL ------------------
   const updateModel = () => {
     const scene = sceneRef.current;
@@ -382,6 +396,7 @@ const ARMenuCards: React.FC = () => {
           requestAnimationFrame(fadeOut);
         } else {
           scene.remove(old);
+          disposeObject(old); 
         }
       };
       fadeOut();
