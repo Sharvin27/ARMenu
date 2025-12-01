@@ -252,24 +252,24 @@ const ARMenuCards: React.FC = () => {
   const modelRotationRef = useRef({ x: 0, y: 0 });
 
   // ------------------ LOAD MODELS ------------------
-  useEffect(() => {
-    const gltfLoader = new GLTFLoader();
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("/draco/");
-    gltfLoader.setDRACOLoader(dracoLoader);
+  // useEffect(() => {
+  //   const gltfLoader = new GLTFLoader();
+  //   const dracoLoader = new DRACOLoader();
+  //   dracoLoader.setDecoderPath("/draco/");
+  //   gltfLoader.setDRACOLoader(dracoLoader);
 
-    menus.forEach((menuItem) => {
-      gltfLoader.load(
-        menuItem.model,
-        (gltf: any) => {
-          loadedModels.current[menuItem.value] = gltf.scene;
-          console.log("Loaded:", menuItem.model);
-        },
-        undefined,
-        (err: any) => console.error("Error loading", menuItem.model, err)
-      );
-    });
-  }, []);
+  //   menus.forEach((menuItem) => {
+  //     gltfLoader.load(
+  //       menuItem.model,
+  //       (gltf: any) => {
+  //         loadedModels.current[menuItem.value] = gltf.scene;
+  //         console.log("Loaded:", menuItem.model);
+  //       },
+  //       undefined,
+  //       (err: any) => console.error("Error loading", menuItem.model, err)
+  //     );
+  //   });
+  // }, []);
 
   // ------------------ CAMERA FEED ------------------
   const setupCameraFeed = async () => {
@@ -387,48 +387,64 @@ const ARMenuCards: React.FC = () => {
   // ------------------ UPDATE MODEL ------------------
   const updateModel = () => {
     const scene = sceneRef.current;
+    const current = menus[currentCardIndex];
+    const existing = loadedModels.current[current.value];
 
+    const gltfLoader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/draco/");
+    gltfLoader.setDRACOLoader(dracoLoader);
+
+    // Remove previous model
     const old = scene.getObjectByName("menu-model");
     if (old) {
-      const fadeOut = () => {
-        if (old.scale.x > 0.1) {
-          old.scale.multiplyScalar(0.9);
-          requestAnimationFrame(fadeOut);
-        } else {
-          scene.remove(old);
-          disposeObject(old); 
-        }
-      };
-      fadeOut();
+      scene.remove(old);
+      disposeObject(old); // IMPORTANT: free GPU memory
     }
 
-    const model = loadedModels.current[menus[currentCardIndex].value];
-    if (!model) return;
+    const showModel = (modelToUse: THREE.Object3D) => {
+      const clone = modelToUse.clone();
+      clone.name = "menu-model";
 
-    const clone = model.clone();
-    clone.name = "menu-model";
+      const startScale = 0.2;
+      clone.scale.set(startScale, startScale, startScale);
+      clone.position.set(0, -0.1, -1.2);
 
-    const startScale = 0.2;
-    clone.scale.set(startScale, startScale, startScale);
-    clone.position.set(0, -0.1, -1.2);
+      const targetScale = modelScaleRef.current;
+      const fadeIn = () => {
+        if (clone.scale.x < targetScale) {
+          clone.scale.x += 0.08;
+          clone.scale.y += 0.08;
+          clone.scale.z += 0.08;
+          requestAnimationFrame(fadeIn);
+        } else {
+          clone.scale.set(targetScale, targetScale, targetScale);
+        }
+      };
+      fadeIn();
 
-    const targetScale = modelScaleRef.current;
-    const fadeIn = () => {
-      if (clone.scale.x < targetScale) {
-        clone.scale.x += 0.08;
-        clone.scale.y += 0.08;
-        clone.scale.z += 0.08;
-        requestAnimationFrame(fadeIn);
-      } else {
-        clone.scale.set(targetScale, targetScale, targetScale);
-      }
+      scene.add(clone);
+      currentModelRef.current = clone;
+      hoverOffsetRef.current = 0;
     };
-    fadeIn();
 
-    scene.add(clone);
-    currentModelRef.current = clone;
-    hoverOffsetRef.current = 0;
+    // If already loaded → use existing
+    if (existing) {
+      showModel(existing);
+    } else {
+      // Lazy load only when needed
+      gltfLoader.load(
+        current.model,
+        (gltf: any) => {
+          loadedModels.current[current.value] = gltf.scene;
+          showModel(gltf.scene);
+        },
+        undefined,
+        (err: any) => console.error("GLTF load error:", err)
+      );
+    }
   };
+
 
   // ------------------ TOUCH CONTROLS ------------------
   useEffect(() => {
