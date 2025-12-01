@@ -38,8 +38,13 @@ const categories: Category[] = [
 
 // ------------------ MENU CARD COMPONENT ------------------
 const MenuCard: React.FC<{ item: FoodItem }> = ({ item }) => (
+  // <div
+  //   className="inline-block w-screen px-4"
+  //   style={{ scrollSnapAlign: "center" }}
+  // >
   <div
-    className="inline-block w-screen px-4"
+    data-menu-card
+    className="shrink-0 grow-0 basis-full px-4"
     style={{ scrollSnapAlign: "center" }}
   >
     <div className="bg-gray-900/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-w-sm mx-auto border-2 border-red-500/50 hover:border-red-400 transition-all">
@@ -485,8 +490,10 @@ const ARMenuCards: React.FC = () => {
       if (!menuRef.current) return;
 
       const scrollLeft = menuRef.current.scrollLeft;
-      const cardWidth = menuRef.current.offsetWidth;
+      const firstCard = menuRef.current.querySelector("[data-menu-card]") as HTMLDivElement | null;
+      const cardWidth = firstCard?.offsetWidth ?? menuRef.current.offsetWidth;
       const idx = Math.round(scrollLeft / cardWidth);
+
 
       if (idx !== currentCardIndex) {
         setCurrentCardIndex(idx);
