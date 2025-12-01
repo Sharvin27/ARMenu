@@ -122,12 +122,12 @@ const CategorySidebar: React.FC<{
 /* ---------------------------------- MENUS ---------------------------------- */
 export const menus: FoodItem[] = [
   { id: 1, name: "Pizza", value: "pizza", description: "Tasty pizza", price: 500, image: "", merchant: 1, quantity: 10, model: "/models/pzza/scene.gltf" },
-  { id: 2, name: "Platter", value: "platter", description: "Delicious platter", price: 350, image: "", merchant: 1, quantity: 10, model: "/models/platter-1.glb" },
-  { id: 3, name: "Murgmussallam", value: "murg", description: "Traditional murg", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/murgmusallam-1.glb" },
-  { id: 4, name: "Fish Fingers", value: "fishfingers", description: "Crispy fish fingers", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/fishfingers-1.glb" },
-  { id: 5, name: "Pasta", value: "pasta", description: "Fresh pasta", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/pasta-1.glb" },
-  { id: 6, name: "Beer Crate", value: "beer", description: "Chilled beer", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/beer-1.glb" },
-  { id: 7, name: "Chicken Bites", value: "chicken_bites", description: "Juicy chicken bites", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/chicken_bites.glb" },
+  { id: 2, name: "Platter", value: "platter", description: "Delicious platter", price: 350, image: "", merchant: 1, quantity: 10, model: "/models/platter-resized.glb" },
+  { id: 3, name: "Murgmussallam", value: "murg", description: "Traditional murg", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/murgmusallam-resized.glb" },
+  { id: 4, name: "Fish Fingers", value: "fishfingers", description: "Crispy fish fingers", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/fishfingers-resized.glb" },
+  { id: 5, name: "Pasta", value: "pasta", description: "Fresh pasta", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/pasta-resized.glb" },
+  { id: 6, name: "Beer Crate", value: "beer", description: "Chilled beer", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/beer-resized.glb" },
+  { id: 7, name: "Chicken Bites", value: "chicken_bites", description: "Juicy chicken bites", price: 250, image: "", merchant: 1, quantity: 10, model: "/models/chicken_bites-resized.glb" },
 ];
 
 const ARMenuCards: React.FC = () => {
@@ -199,7 +199,7 @@ const ARMenuCards: React.FC = () => {
     setupCameraFeed();
 
     document.body.style.overflow = "hidden";
-    document.body.style.height = "100vh";
+    document.body.style.height = "100dvh";
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
 
@@ -442,7 +442,7 @@ const ARMenuCards: React.FC = () => {
 
   /* ------------------------------ UI ------------------------------ */
   return (
-    <div ref={containerRef} className="w-full h-full">
+    <div ref={containerRef} className="w-full" style={{ height: "100dvh" }}>
       <button
         onClick={() => setIsSidebarOpen(true)}
         className="fixed top-6 left-6 z-50 bg-gradient-to-br from-white/95 to-red-50/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border-2 border-red-200 hover:border-red-300 hover:shadow-2xl hover:shadow-red-500/30 transition-all transform hover:scale-110"
@@ -475,8 +475,9 @@ const ARMenuCards: React.FC = () => {
       />
 
       <div
-        className="min-h-screen flex flex-col relative"
+        className="flex flex-col relative"
         style={{
+          minHeight: "100dvh",
           position: "relative",
           zIndex: 5,
           pointerEvents: "none",
